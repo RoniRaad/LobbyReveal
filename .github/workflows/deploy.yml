@@ -36,14 +36,14 @@ jobs:
       
       - name: Bump version number minor
         if: ${{ startsWith( github.head_ref, 'feature' )}}
-        run: dotnet version -s -f ./AccountManager.UI/AccountManager.UI.csproj minor
+        run: dotnet version -s -f ./LobbyReveal.UI/LobbyReveal.UI.csproj minor
       
       - name: Bump version number patch
         if: ${{ startsWith( github.head_ref, 'hotfix' )}}
-        run: dotnet version -s -f ./AccountManager.UI/AccountManager.UI.csproj patch
+        run: dotnet version -s -f ./LobbyReveal.UI/LobbyReveal.UI.csproj patch
       
       - name: Get version number
-        run: dotnet version -s -o text -f ./AccountManager.UI/AccountManager.UI.csproj | select -last 1 | foreach-object { $_.Trim() } | foreach-object { Write-Output "::set-output name=versionNum::$_" }
+        run: dotnet version -s -o text -f ./LobbyReveal.UI/LobbyReveal.UI.csproj | select -last 1 | foreach-object { $_.Trim() } | foreach-object { Write-Output "::set-output name=versionNum::$_" }
         id: get-project-version
 
       - name: Publish solution
@@ -58,10 +58,10 @@ jobs:
           New-Item -ItemType Directory -Force -Path Deployment/Releases/
       
       - name: NuGet
-        run: Start-Process "$env:USERPROFILE\.nuget\packages\nuget.commandline\6.7.0\tools\NuGet.exe" -ArgumentList "pack AccountManager.UI/ReleaseSpec.nuspec -Version ${{ steps.get-project-version.outputs.versionNum }} -Properties Configuration=Release -OutputDirectory Deployment/GeneratedNugets" -NoNewWindow -Wait
+        run: Start-Process "$env:USERPROFILE\.nuget\packages\nuget.commandline\6.7.0\tools\NuGet.exe" -ArgumentList "pack LobbyReveal.UI/ReleaseSpec.nuspec -Version ${{ steps.get-project-version.outputs.versionNum }} -Properties Configuration=Release -OutputDirectory Deployment/GeneratedNugets" -NoNewWindow -Wait
  
       - name: Squirrelify
-        run: Start-Process "$env:USERPROFILE\.nuget\packages\squirrel.windows\1.9.0\tools\Squirrel.exe" -ArgumentList "--releasify Deployment/GeneratedNugets/OmniAccountManager.${{ steps.get-project-version.outputs.versionNum }}.nupkg --releaseDir=Deployment/Releases" -NoNewWindow -Wait
+        run: Start-Process "$env:USERPROFILE\.nuget\packages\squirrel.windows\1.9.0\tools\Squirrel.exe" -ArgumentList "--releasify Deployment/GeneratedNugets/LobbyReveal.${{ steps.get-project-version.outputs.versionNum }}.nupkg --releaseDir=Deployment/Releases" -NoNewWindow -Wait
       
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
