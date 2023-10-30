@@ -1,0 +1,47 @@
+﻿@using LobbyReveal.Core.Interfaces
+@using LobbyReveal.Core.Services
+@using LobbyReveal.Infrastructure.Services
+@using Microsoft.Extensions.Caching.Distributed
+@inherits LayoutComponentBase
+@inject IAlertService _alertService; 
+@inject IJSRuntime _jsRuntime
+@inject NavigationManager _navManager
+
+<div class = "notification">
+	@if (updateAvailable)
+	{
+		<div class="alert alert-info" style="animation: inherit;" role="alert">
+			<a @onclick="() => updateAvailable = !updateAvailable" class="close">X</a>
+			There is an update available. Click restart to open the new version.
+			<a style="margin-left: 10px" href="" @onclick="async () => { }">Restart</a>
+		</div>
+	}
+
+	@foreach(var errorMessage in _alertService.GetErrorAlerts()){
+		<div class="alert alert-danger" role="alert">
+			<a @onclick="() => _alertService.RemoveErrorMessage(errorMessage)" class="close">X</a>
+			@errorMessage.DisplayMessage
+		</div>
+	}
+
+	@foreach(var infoMessage in _alertService.GetInfoAlerts()){
+		<div class="alert alert-info" role="alert">
+			<a @onclick="() => _alertService.RemoveInfoMessage(infoMessage)" class="close">X</a>
+			@infoMessage.DisplayMessage
+		</div>
+	}
+</div>
+
+<div class="page" style="width: 100%">
+	<div class="sidebars-container" >
+		<div class="sidebar" style="z-index: 3">
+			<NavMenu ToggleSettingsModal="() => settingsModalOpen = !settingsModalOpen" RefreshTiles="Refresh" />
+		</div>
+	</div>
+	<main class="main-content" style="width: calc(100% - 238px);">
+		<div class="top-shadow"></div>
+		<article style="overflow: hidden;" class="content px-4">
+			@Body
+		</article>
+	</main>
+</div>

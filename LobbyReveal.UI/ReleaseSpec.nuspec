@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package >
+  <metadata>
+    <id>LobbyReveal</id>
+    <version>0.0.0.0</version>
+    <title>Lobby Revealer</title>
+    <authors>Roni Raad</authors>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <!-- <icon>icon.png</icon> -->
+    <projectUrl>https://github.com/RoniRaad/Omni-Account-Manager</projectUrl>
+    <description>Account manager that works for multiple gaming platforms</description>
+    <releaseNotes></releaseNotes>
+    <copyright></copyright>
+    <tags></tags>
+  </metadata>
+  <files>
+	<file src="bin\Release\net7.0-windows\publish\**" target="lib\net45"/>
+  </files>
+</package>

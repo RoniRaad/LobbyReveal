@@ -1,0 +1,87 @@
+﻿@page "/"
+@using LobbyReveal.Core.Interfaces
+@using LobbyReveal.Core.Models
+@using LobbyReveal.Core.Services
+@using LobbyReveal.Core;
+@using LobbyReveal.Infrastructure.Services
+@using LobbyReveal.Infrastructure.Services.WebSocket;
+@using Microsoft.Extensions.Caching.Memory;
+@inject IJSRuntime _jsRuntime
+@inject IGetPorofessorTileForUser _porofessor
+@inject IMemoryCache _memoryCache
+@inject ILCUClient _lcuClient
+@inject ILeagueWebSocketService WebSocketService
+@namespace LobbyReveal.Blazor.Pages
+
+<div class="container-fluid">
+    @if (tiles is null)
+    {
+        <div class="row" style="--bs-gutter-x: 0rem; height:99vh">
+        @for (int i = 0; i < 5; i++)
+        {
+            <div class="tile" style="
+                        color: white;
+                        margin: 10px;
+                        background-color: var(--secondary-dark);
+                        box-shadow: 0px 0px 6px #202020;
+                        height: 433px;
+                        width: 229px;
+                ">
+                <div class="topbar" style="
+                        height: 44px;
+                        background-color: #222222;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        align-content: center;
+                ">
+                    <h4 style="margin: 0px;">?</h4>
+                </div><div class="body" style="
+                        background-color: #3d3d3d;
+                        overflow: hidden;
+                        min-height: 87%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    ">
+                    <h1>?</h1>
+                </div>
+            </div>
+        }
+        </div>
+    }
+    else
+    {
+        <div class="row" style="--bs-gutter-x: 0rem; height:99vh">
+
+        @foreach (var tileHtml in tiles.OrderBy(x => x.Role))
+        {
+             <div class="tile" style="
+                        color: white;
+                        margin: 10px;
+                        background-color: var(--secondary-dark);
+                        box-shadow: 0px 0px 6px #202020;
+                        height: 433px;
+                        width: 229px;
+                ">
+                <div class="topbar" style="
+                        height: 44px;
+                        background-color: #222222;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        align-content: center;
+                ">
+                <h4 style="margin: 0px;">@tileHtml.Role</h4>
+                </div><div class="body" style="
+                        background-color: #3d3d3d;
+                        overflow: hidden;
+                        min-height: 87%;
+                    "><iframe style="height: 100%;" id="iframe_@tileHtml.Username" />
+                </div>
+              </div>
+        }
+    </div>
+    }
+    
+</div>

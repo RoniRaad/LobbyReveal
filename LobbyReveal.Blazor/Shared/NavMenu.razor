@@ -1,0 +1,39 @@
+﻿@using LobbyReveal.Core.Interfaces
+@inject NavigationManager uriHelper;
+
+<div class="sidebar-shrink" @onclick="ToggleNavMenu">
+	<nav class="flex-column">
+		<div class="collapse show">
+			<div class="nav-item px-3">
+				<NavLink class="nav-link nav-button" @onclick="RefreshTiles" Match="NavLinkMatch.All">
+					<span class="oi oi-reload" aria-hidden="true" title="Filters"></span>
+				</NavLink>
+			</div>
+		</div>
+
+		<div class="nav-item px-3">
+			<NavLink @onclick="ToggleSettingsModal" class="nav-link nav-button">
+				<span class="oi oi-cog" aria-hidden="true" title="Settings"></span>
+			</NavLink>
+		</div>
+	</nav>
+</div>
+
+@code {
+	[Parameter]
+	public Action RefreshTiles { get; set; } = delegate { };
+	[Parameter]
+	public Action ToggleSettingsModal { get; set; } = delegate { };
+	private bool collapseNavMenu = true;
+	private bool showImportModal = false;
+
+	private void ToggleNavMenu()
+	{
+		collapseNavMenu = !collapseNavMenu;
+	}
+
+	private void Import()
+	{
+		showImportModal = true;
+	}
+}
