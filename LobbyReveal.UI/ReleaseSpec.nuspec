@@ -8,8 +8,8 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <license type="expression">MIT</license>
     <!-- <icon>icon.png</icon> -->
-    <projectUrl>https://github.com/RoniRaad/Omni-Account-Manager</projectUrl>
-    <description>Account manager that works for multiple gaming platforms</description>
+    <projectUrl>https://github.com/RoniRaad/LobbyReveal</projectUrl>
+    <description>Reveals the ranked lobby in league of legends</description>
     <releaseNotes></releaseNotes>
     <copyright></copyright>
     <tags></tags>
