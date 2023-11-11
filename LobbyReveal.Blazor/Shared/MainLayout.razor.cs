@@ -11,7 +11,7 @@ namespace LobbyReveal.Blazor.Shared
         {
             _alertService.Notify += () => InvokeAsync(() => StateHasChanged());
 
-            //updateAvailable = await _appUpdateService.CheckForUpdate();
+            updateAvailable = await _appUpdateService.CheckForUpdate();
         }
 
         private void Refresh()

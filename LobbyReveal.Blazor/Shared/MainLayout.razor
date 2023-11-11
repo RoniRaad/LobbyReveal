@@ -6,6 +6,7 @@
 @inject IAlertService _alertService; 
 @inject IJSRuntime _jsRuntime
 @inject NavigationManager _navManager
+@inject IAppUpdateService _appUpdateService
 
 <div class = "notification">
 	@if (updateAvailable)
@@ -13,7 +14,7 @@
 		<div class="alert alert-info" style="animation: inherit;" role="alert">
 			<a @onclick="() => updateAvailable = !updateAvailable" class="close">X</a>
 			There is an update available. Click restart to open the new version.
-			<a style="margin-left: 10px" href="" @onclick="async () => { }">Restart</a>
+			<a style="margin-left: 10px" href="" @onclick="async () => { await _appUpdateService.UpdateAndRestart(); }">Restart</a>
 		</div>
 	}
 

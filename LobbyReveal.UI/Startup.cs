@@ -12,6 +12,8 @@ using Blazorise.Icons.FontAwesome;
 using LobbyReveal.Infrastructure.Services.Token;
 using System.Net.Http;
 using LobbyReveal.Infrastructure.Services.WebSocket;
+using LobbyReveal.Core.Models;
+using LobbyReveal.Infrastructure.Services;
 
 namespace LobbyReveal.UI
 {
@@ -26,12 +28,14 @@ namespace LobbyReveal.UI
                 builder.AddConfiguration(configuration.GetSection("Logging"));
                 builder.AddFile(o => o.RootPath = AppContext.BaseDirectory);
             });
+            services.Configure<AboutEndpoints>(configuration.GetSection("AboutEndpoints"));
             services.AddMemoryCache();
             services.AddSingleton<IAlertService, AlertService>();
             services.AddLogging();
             services.AddSingleton<IRiotTokenService, RiotTokenService>();
             services.AddSingleton<IGetPorofessorTileForUser, GetPorofessorTileForUser>();
             services.AddSingleton<ILCUClient, LCUClient>();
+            services.AddSingleton<IAppUpdateService, SquirrelAppUpdateService>();
             services.AddLazyCache();
             services.AddHttpClient();
             services.AddHttpClient("SSLBypass").ConfigureHttpMessageHandlerBuilder(x =>
