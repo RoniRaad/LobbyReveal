@@ -10,7 +10,7 @@
 		<ApplicationIcon>icon.ico</ApplicationIcon>
 		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
 		<Title>Lobby Reveal</Title>
-		<Version>0.12.0</Version>
+		<Version>0.13.0</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
