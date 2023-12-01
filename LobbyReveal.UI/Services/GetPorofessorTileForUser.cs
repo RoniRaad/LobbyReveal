@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using LobbyReveal.Core.Interfaces;
 using LobbyReveal.Core.Models.RiotGames;
 using LobbyReveal.UI.Windows;
+using Microsoft.Web.WebView2.Core;
 
 namespace LobbyReveal.UI.Services
 {
@@ -31,10 +32,15 @@ namespace LobbyReveal.UI.Services
                     WebView.Show();
                 }
 
-                WebView.webv2.Source = new Uri($"https://porofessor.gg/pregame/na/{string.Join(',', usernames)}");
-                WebView.webv2.CoreWebView2InitializationCompleted += (_, e) =>
+				WebView.webv2.Source = new Uri($"https://porofessor.gg/pregame/na/{string.Join(',', usernames)}");
+
+				WebView.webv2.CoreWebView2InitializationCompleted += (_, e) =>
                 {
-                    WebView.webv2.CoreWebView2.WebResourceResponseReceived += async (e, v) =>
+					var cookie = WebView.webv2.CoreWebView2.CookieManager.CreateCookie("darkMode", "1", "porofessor.gg", "/");
+					WebView.webv2.CoreWebView2.CookieManager.AddOrUpdateCookie(cookie);
+
+
+					WebView.webv2.CoreWebView2.WebResourceResponseReceived += async (e, v) =>
                     {
                         if (v?.Request?.Uri?.Contains("leagueofgraphs") is true)
                         {
@@ -68,6 +74,7 @@ namespace LobbyReveal.UI.Services
             if (WebView is null)
                 return new();
 
+
             var usernameAndTileHtml = new List<PorofessorTile>();
             string scriptToGetUrls = @"Array.from(document.styleSheets).map(ss => ss.href);";
             string jsonUrls = await WebView.webv2.CoreWebView2.ExecuteScriptAsync(scriptToGetUrls);
@@ -75,7 +82,7 @@ namespace LobbyReveal.UI.Services
 
             foreach (var username in usernames)
             {
-                var tile = await (WebView?.webv2?.CoreWebView2?.ExecuteScriptAsync($"document.querySelector(`div[data-summonername='{username}']`).outerHTML") ?? Task.FromResult(""));
+                var tile = await (WebView?.webv2?.CoreWebView2?.ExecuteScriptAsync($"document.querySelector(`div[data-summonername='{username.Replace('-', '#')}']`).outerHTML") ?? Task.FromResult(""));
                 usernameAndTileHtml.Add(new()
                 {
                     Html = Regex.Unescape(tile),

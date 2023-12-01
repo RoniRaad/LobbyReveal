@@ -93,7 +93,8 @@ namespace LobbyReveal.Infrastructure.Clients
                         usersInLobby.Add(new()
                         {
                             Username = localSummoner.DisplayName,
-                            Role = role
+                            Role = role,
+                            Puuid = localSummoner.Puuid
                         });
                 }
                 else
@@ -118,7 +119,8 @@ namespace LobbyReveal.Infrastructure.Clients
                                     usersInLobby.Add(new()
                                     {
                                         Username = participant.Name,
-                                        Role = role
+                                        Role = role,
+                                        Puuid = participant.Puuid,
                                     });
 
                                 i = participants.Users.Count;
@@ -132,8 +134,21 @@ namespace LobbyReveal.Infrastructure.Clients
                 }
             }
 
+            var summonerNamesRequest = new SummonerNamesRequest()
+            {
+                Puuids = usersInLobby.Select(x => x.Puuid).ToList()
+            };
 
-            return usersInLobby;
+            var namesetsResponse = await riotClient.PostAsJsonAsync("/player-account/lookup/v1/namesets-for-puuids", summonerNamesRequest);
+            var namesets = await namesetsResponse.Content.ReadFromJsonAsync<NamesetsResponse>();
+
+            namesets.Namesets.ForEach(x =>
+            {
+				usersInLobby.First(y => y.Puuid == x.Puuid).Username = $"{x.Gnt.GameName}-{x.Gnt.TagLine}";
+
+			});
+
+			return usersInLobby;
         }
 
         public async Task MutePlayer(long id, string puuid, long obfuscatedId, string obfuscatedPuuid)
@@ -283,5 +298,72 @@ namespace LobbyReveal.Infrastructure.Clients
             public int XpUntilNextLevel { get; set; }
         }
 
-    }
+        public class SummonerNamesRequest
+        {
+            [JsonPropertyName("puuids")]
+            public List<string> Puuids { get; set; } = new List<string>();
+        }
+
+		public class Gnt
+		{
+			[JsonPropertyName("gameName")]
+			public string GameName { get; set; }
+
+			[JsonPropertyName("shadowGnt")]
+			public bool ShadowGnt { get; set; }
+
+			[JsonPropertyName("tagLine")]
+			public string TagLine { get; set; }
+		}
+
+		public class Nameset
+		{
+			[JsonPropertyName("error")]
+			public string Error { get; set; }
+
+			[JsonPropertyName("gnt")]
+			public Gnt Gnt { get; set; }
+
+			[JsonPropertyName("playstationNameset")]
+			public PlaystationNameset PlaystationNameset { get; set; }
+
+			[JsonPropertyName("providerId")]
+			public string ProviderId { get; set; }
+
+			[JsonPropertyName("puuid")]
+			public string Puuid { get; set; }
+
+			[JsonPropertyName("switchNameset")]
+			public SwitchNameset SwitchNameset { get; set; }
+
+			[JsonPropertyName("xboxNameset")]
+			public XboxNameset XboxNameset { get; set; }
+		}
+
+		public class PlaystationNameset
+		{
+			[JsonPropertyName("name")]
+			public string Name { get; set; }
+		}
+
+		public class NamesetsResponse
+		{
+			[JsonPropertyName("namesets")]
+			public List<Nameset> Namesets { get; set; }
+		}
+
+		public class SwitchNameset
+		{
+			[JsonPropertyName("name")]
+			public string Name { get; set; }
+		}
+
+		public class XboxNameset
+		{
+			[JsonPropertyName("name")]
+			public string Name { get; set; }
+		}
+
+
+	}
 }

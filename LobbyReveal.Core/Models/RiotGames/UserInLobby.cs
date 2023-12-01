@@ -6,6 +6,9 @@ namespace LobbyReveal.Core.Models.RiotGames
     {
         public string Username { get; set; }
         public Role Role { get; set; }
+        public string Puuid { get; set; }
+        public string RiotId { get; set; }
+        public string Tag { get; set; }
     }
 
     public enum Role
